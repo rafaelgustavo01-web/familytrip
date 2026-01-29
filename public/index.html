@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Planejador interativo de viagem ao Nordeste - Pium, RN 2026">
+    <meta name="theme-color" content="#0f172a">
+    <title>Viagem Nordeste 2026 - Planejador</title>
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='75' font-size='75'>🌴</text></svg>">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Manifest for PWA -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect fill='%231e293b' width='180' height='180'/><text x='50%' y='50%' font-size='120' text-anchor='middle' dominant-baseline='central'>🌴</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🌴 Viagem Nordeste - Pium & Região</h1>
+            <p>Planejador interativo e colaborativo para sua aventura no Rio Grande do Norte</p>
+            <div class="header-info" id="headerInfo"></div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="tabs" id="tabsContainer"></div>
+
+        <!-- Tab Contents -->
+        <div id="itinerary" class="tab-content active">
+            <h2 style="color: var(--color-primary); margin-bottom: 20px;">📅 Roteiro Dia a Dia</h2>
+            <div class="itinerary" id="itineraryContainer"></div>
+        </div>
+
+        <div id="budget" class="tab-content">
+            <h2 style="color: var(--color-primary); margin-bottom: 20px;">💰 Controle de Orçamento</h2>
+            <div class="total-summary">
+                <h2>Gasto Estimado Total (sem hospedagem)</h2>
+                <div class="total-value">R$ 5.500 - 6.000</div>
+                <p style="color: var(--color-text-secondary);">Baseado em família de 3-4 pessoas</p>
+            </div>
+            <div class="budget-grid" id="budgetContainer"></div>
+            <div class="card" style="margin-top: 30px;">
+                <h3>💡 Dicas de Economia</h3>
+                <ul style="list-style: none; padding: 0;" id="economyTips"></ul>
+            </div>
+        </div>
+
+        <div id="reservas" class="tab-content">
+            <h2 style="color: var(--color-primary); margin-bottom: 20px;">🎫 Reservas & Vouchers</h2>
+            <div style="margin-bottom: 30px;">
+                <button class="btn" onclick="window.reservationManager.addReservation()">➕ Adicionar Reserva</button>
+            </div>
+            <div id="reservasContainer"></div>
+        </div>
+
+        <div id="tides" class="tab-content">
+            <h2 style="color: var(--color-primary); margin-bottom: 20px;">🌊 Tábua de Marés - Fevereiro 2026</h2>
+            <div class="card" style="margin-bottom: 20px;">
+                <p style="margin-bottom: 15px;"><strong>Dicas Importantes:</strong></p>
+                <ul style="list-style: none; padding: 0;" id="tidesImportant"></ul>
+            </div>
+            <div class="tides-info" id="tidesContainer"></div>
+            <div class="links-grid" style="margin-top: 30px;" id="tidesLinksContainer"></div>
+        </div>
+
+        <div id="links" class="tab-content">
+            <h2 style="color: var(--color-primary); margin-bottom: 20px;">🔗 Links e Operadores</h2>
+            <div id="linksContainer"></div>
+        </div>
+
+        <div id="shared" class="tab-content">
+            <h2 style="color: var(--color-primary); margin-bottom: 20px;">👥 Compartilhamento & Colaboração</h2>
+            <div class="share-section">
+                <h3>📋 Gerar Link para Compartilhar</h3>
+                <p style="color: var(--color-text-secondary); margin-bottom: 15px;">Compartilhe o planejamento com sua família e amigos. Eles poderão ver o roteiro, orçamento, marés e adicionar notas de participação.</p>
+                <button class="btn" onclick="window.sharingManager.generateShareLink()">🔗 Gerar Link Compartilhável</button>
+                <div id="shareLink" style="margin-top: 15px;"></div>
+            </div>
+
+            <div class="share-section" style="margin-top: 20px;">
+                <h3>💬 Notas Colaborativas</h3>
+                <p style="color: var(--color-text-secondary); margin-bottom: 15px;">Adicione notas para coordenar com outras pessoas. Todos podem ver e contribuir.</p>
+                <textarea id="collaborativeNotes" class="share-input" style="height: 120px; border: 1px solid var(--color-border); padding: 12px; border-radius: 8px; background: var(--color-bg-dark); color: var(--color-text-primary); font-family: sans-serif; resize: vertical;" placeholder="Ex: João leva a câmera. Maria reserva Parrachos para 09h. Todos se encontram às 07h no resort..."></textarea>
+                <button class="btn" onclick="window.sharingManager.saveNotes()">💾 Salvar Notas</button>
+                <div id="notesDisplay" style="margin-top: 15px;"></div>
+            </div>
+
+            <div class="share-section" style="margin-top: 20px;">
+                <h3>📲 Integração com Contatos</h3>
+                <p style="color: var(--color-text-secondary); margin-bottom: 15px;">Envie mensagens rápidas para coordenar com participantes da viagem.</p>
+                <div class="share-input">
+                    <input type="text" id="contactName" placeholder="Nome do contato (ex: Maria, João)">
+                    <button class="btn" onclick="window.sharingManager.generateWhatsApp()">WhatsApp 💬</button>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 30px;">
+                <h3>📝 Checklist de Compartilhamento</h3>
+                <ul style="list-style: none; padding: 0;" id="shareChecklistContainer"></ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>🌴 <strong>Viagem Nordeste 2026</strong> - Planejador Completo</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">Criado com ❤️ para uma viagem inesquecível. Bom descanso, sol, natureza e companhia!</p>
+            <p style="margin-top: 15px; font-size: 0.8rem; color: var(--color-text-muted);">v1.0 | Deploy: Firebase Hosting</p>
+        </div>
+    </div>
+
+    <!-- Scripts (in order of dependency) -->
+    <script src="js/data.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/reservations.js"></script>
+    <script src="js/sharing.js"></script>
+    <script src="js/main.js"></script>
+
+    <!-- Service Worker Registration (PWA) -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js').catch(err => {
+                console.log('Service Worker registration failed:', err);
+            });
+        }
+    </script>
+</body>
+</html>
