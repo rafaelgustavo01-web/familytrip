@@ -1,0 +1,20 @@
+project-structure/
+├── public/
+│   ├── index.html
+│   ├── css/
+│   │   ├── styles.css
+│   │   └── responsive.css
+│   ├── js/
+│   │   ├── main.js
+│   │   ├── data.js
+│   │   ├── ui.js
+│   │   ├── reservations.js
+│   │   ├── sharing.js
+│   │   └── storage.js
+│   ├── assets/
+│   │   └── (ícones, imagens)
+│   └── manifest.json
+├── firebase.json
+├── .firebaserc
+├── .gitignore
+└── README.md
