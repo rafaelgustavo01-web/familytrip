@@ -10,9 +10,12 @@ class TripProgressManager {
     }
 
     init() {
-        this.createProgressBar();
-        this.updateProgress();
-        setInterval(() => this.updateProgress(), 60000); // Atualiza a cada minuto
+        // Aguardar o DOM estar completamente carregado
+        setTimeout(() => {
+            this.createProgressBar();
+            this.updateProgress();
+            setInterval(() => this.updateProgress(), 60000);
+        }, 100);
     }
 
     calculateProgress() {
@@ -30,6 +33,9 @@ class TripProgressManager {
     }
 
     createProgressBar() {
+        // Verificar se já existe
+        if (document.getElementById('tripProgress')) return;
+
         const container = document.createElement('div');
         container.className = 'trip-progress-wrapper';
         container.id = 'tripProgress';
@@ -48,9 +54,20 @@ class TripProgressManager {
             <div class="progress-milestones" id="progressMilestones"></div>
         `;
         
-        const mainContent = document.querySelector('.container') || document.querySelector('main') || document.body;
-        const firstSection = mainContent.querySelector('section') || mainContent.firstChild;
-        mainContent.insertBefore(container, firstSection);
+        // INTEGRAÇÃO INTELIGENTE: Encontrar onde inserir
+        const header = document.querySelector('.header');
+        const tabs = document.querySelector('.tabs');
+        const itinerary = document.querySelector('#itinerary');
+        
+        // Inserir após o header, antes das tabs
+        if (header && tabs) {
+            header.parentNode.insertBefore(container, tabs);
+        } else if (itinerary) {
+            itinerary.insertBefore(container, itinerary.firstChild);
+        } else {
+            // Fallback: inserir no início do body
+            document.body.insertBefore(container, document.body.firstChild);
+        }
     }
 
     updateProgress() {
@@ -64,7 +81,7 @@ class TripProgressManager {
         if (percentEl) percentEl.textContent = `${progress.percentage}%`;
         
         if (statsEl) {
-            statsEl.textContent = `Dia ${progress.daysElapsed + 1} de ${this.totalDays}`;
+            statsEl.textContent = `Dia ${Math.min(progress.daysElapsed + 1, this.totalDays)} de ${this.totalDays}`;
         }
         
         if (countdownEl) {
@@ -101,10 +118,15 @@ class TripProgressManager {
     }
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
+// Inicialização com retry
+function initProgressManager() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            window.tripProgressManager = new TripProgressManager();
+        });
+    } else {
         window.tripProgressManager = new TripProgressManager();
-    });
-} else {
-    window.tripProgressManager = new TripProgressManager();
+    }
 }
+
+initProgressManager();

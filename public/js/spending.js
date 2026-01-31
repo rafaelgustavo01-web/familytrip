@@ -10,7 +10,7 @@ class SpendingTracker {
             passeios: 1200,
             outros: 500
         };
-        this.init();
+        setTimeout(() => this.init(), 300);
     }
 
     init() {
@@ -38,35 +38,52 @@ class SpendingTracker {
             this.saveExpenses();
             this.updateDisplay();
             
-            window.notificationManager?.show(
-                'Gasto Registrado',
-                `${category}: R$ ${amount.toFixed(2)}`,
-                'success'
-            );
+            if (window.notificationManager) {
+                window.notificationManager.show(
+                    'Gasto Registrado',
+                    `${category}: R$ ${amount.toFixed(2)}`,
+                    'success'
+                );
+            }
         }
     }
 
     createWidget() {
+        if (document.getElementById('spendingWidget')) return;
+
         const widget = document.createElement('div');
         widget.className = 'spending-widget';
         widget.id = 'spendingWidget';
         
         widget.innerHTML = `
             <div class="spending-header">
-                <div class="spending-title">💰 Controle de Gastos</div>
-                <button onclick="window.spendingTracker.resetExpenses()" 
-                        style="padding: 8px 16px; border-radius: 8px; background: var(--color-red-500); 
-                               color: white; border: none; cursor: pointer; font-size: 12px;">
-                    🔄 Resetar
+                <div class="spending-title">💰 Controle de Gastos Real vs Estimado</div>
+                <button onclick="window.spendingTracker.showAddExpenseDialog()" 
+                        style="padding: 8px 16px; border-radius: 8px; background: var(--color-teal-500); 
+                               color: white; border: none; cursor: pointer; font-size: 12px; font-weight: 600;">
+                    ➕ Adicionar Gasto
                 </button>
             </div>
             <div class="spending-comparison" id="spendingComparison"></div>
             <div class="spending-chart" id="spendingChart"></div>
         `;
         
-        const budgetSection = document.querySelector('#budget') || document.querySelector('[id*="orcamento"]');
+        // INTEGRAÇÃO INTELIGENTE
+        const budgetSection = document.querySelector('#budget, [id*="orcamento"], .budget-section');
+        
         if (budgetSection) {
-            budgetSection.appendChild(widget);
+            const title = budgetSection.querySelector('h2');
+            if (title) {
+                title.after(widget);
+            } else {
+                budgetSection.insertBefore(widget, budgetSection.firstChild);
+            }
+        } else {
+            // Fallback: adicionar em tabs
+            const tabContents = document.querySelectorAll('.tab-content');
+            if (tabContents.length > 1) {
+                tabContents[1].insertBefore(widget, tabContents[1].firstChild);
+            }
         }
     }
 
@@ -87,12 +104,12 @@ class SpendingTracker {
                     <div class="spending-value real">R$ ${totalSpent.toFixed(2)}</div>
                 </div>
                 <div class="spending-col">
-                    <div class="spending-label">${difference >= 0 ? 'Economia' : 'Deficit'}</div>
+                    <div class="spending-label">${difference >= 0 ? 'Economia' : 'Déficit'}</div>
                     <div class="spending-value ${difference >= 0 ? 'economia' : 'deficit'}">
                         R$ ${Math.abs(difference).toFixed(2)}
                     </div>
                     <div class="spending-difference ${difference >= 0 ? 'positive' : 'negative'}">
-                        ${difference >= 0 ? '✓' : '⚠'} ${((difference / totalBudget) * 100).toFixed(1)}%
+                        ${difference >= 0 ? '✓' : '⚠'} ${((Math.abs(difference) / totalBudget) * 100).toFixed(1)}%
                     </div>
                 </div>
             `;
@@ -114,6 +131,22 @@ class SpendingTracker {
         `;
     }
 
+    showAddExpenseDialog() {
+        const category = prompt('Categoria:\n1. combustivel\n2. alimentacao\n3. passeios\n4. outros\n\nDigite o nome:');
+        if (!category || !this.expenses.hasOwnProperty(category)) {
+            alert('Categoria inválida!');
+            return;
+        }
+        
+        const amount = parseFloat(prompt('Valor gasto (R$):'));
+        if (isNaN(amount) || amount <= 0) {
+            alert('Valor inválido!');
+            return;
+        }
+        
+        this.addExpense(category, amount);
+    }
+
     resetExpenses() {
         if (confirm('Deseja realmente resetar todos os gastos?')) {
             this.expenses = {
@@ -125,19 +158,26 @@ class SpendingTracker {
             this.saveExpenses();
             this.updateDisplay();
             
-            window.notificationManager?.show(
-                'Gastos Resetados',
-                'Todos os gastos foram limpos',
-                'success'
-            );
+            if (window.notificationManager) {
+                window.notificationManager.show(
+                    'Gastos Resetados',
+                    'Todos os gastos foram limpos',
+                    'success'
+                );
+            }
         }
     }
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
+function initSpendingTracker() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            window.spendingTracker = new SpendingTracker();
+        });
+    } else {
         window.spendingTracker = new SpendingTracker();
-    });
-} else {
-    window.spendingTracker = new SpendingTracker();
+    }
 }
+
+initSpendingTracker();
+    
