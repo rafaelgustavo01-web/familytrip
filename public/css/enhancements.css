@@ -1,0 +1,439 @@
+/* ==============================================
+   🎨 MELHORIAS VISUAIS E UX
+   Arquivo: enhancements.css
+   ============================================== */
+
+/* ========== TIMELINE VISUAL ========== */
+.timeline-container {
+    position: relative;
+    padding: 20px 0;
+    margin: 20px 0;
+}
+
+.timeline-line {
+    position: absolute;
+    left: 30px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, var(--color-teal-400), var(--color-teal-600));
+    border-radius: 10px;
+}
+
+.timeline-day {
+    position: relative;
+    padding-left: 70px;
+    margin-bottom: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.timeline-day:hover {
+    transform: translateX(5px);
+}
+
+.timeline-marker {
+    position: absolute;
+    left: 18px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--color-teal-500);
+    border: 3px solid var(--color-charcoal-800);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    z-index: 2;
+    transition: all 0.3s ease;
+}
+
+.timeline-day.completed .timeline-marker {
+    background: var(--color-green-500);
+    animation: pulse 2s infinite;
+}
+
+.timeline-day.current .timeline-marker {
+    background: var(--color-orange-500);
+    box-shadow: 0 0 20px var(--color-orange-400);
+    animation: glow 1.5s infinite;
+}
+
+.timeline-card {
+    background: var(--color-charcoal-700);
+    border-radius: 12px;
+    padding: 20px;
+    border-left: 4px solid var(--color-teal-500);
+    transition: all 0.3s ease;
+}
+
+.timeline-card:hover {
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    border-left-color: var(--color-teal-400);
+}
+
+.timeline-card.expanded {
+    max-height: 1000px;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@keyframes glow {
+    0%, 100% { box-shadow: 0 0 10px var(--color-orange-400); }
+    50% { box-shadow: 0 0 25px var(--color-orange-300); }
+}
+
+/* ========== BARRA DE PROGRESSO ========== */
+.trip-progress-wrapper {
+    position: sticky;
+    top: 20px;
+    background: var(--color-charcoal-800);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.progress-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-teal-400);
+}
+
+.progress-stats {
+    font-size: 14px;
+    color: var(--color-gray-300);
+}
+
+.progress-bar-container {
+    position: relative;
+    width: 100%;
+    height: 12px;
+    background: var(--color-charcoal-700);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-teal-500), var(--color-teal-400));
+    border-radius: 10px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.progress-milestones {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+    gap: 12px;
+}
+
+.milestone {
+    flex: 1;
+    text-align: center;
+    padding: 8px;
+    background: var(--color-charcoal-700);
+    border-radius: 8px;
+    font-size: 12px;
+}
+
+.milestone.active {
+    background: var(--color-teal-500);
+    color: var(--color-charcoal-900);
+    font-weight: 600;
+}
+
+/* ========== BADGES E INDICADORES ========== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 8px;
+    margin-bottom: 4px;
+}
+
+.badge-plantao {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    color: white;
+}
+
+.badge-mare {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+}
+
+.badge-caro {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+}
+
+.badge-recomendado {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+    color: white;
+}
+
+.badge-tempo {
+    background: linear-gradient(135deg, #9b59b6, #8e44ad);
+    color: white;
+}
+
+/* ========== CARDS EXPANSÍVEIS ========== */
+.activity-card {
+    background: var(--color-charcoal-700);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.activity-card:hover {
+    border-color: var(--color-teal-500);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+.activity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.activity-icon {
+    font-size: 24px;
+    margin-right: 12px;
+}
+
+.activity-expand-icon {
+    transition: transform 0.3s ease;
+    font-size: 20px;
+    color: var(--color-teal-400);
+}
+
+.activity-card.expanded .activity-expand-icon {
+    transform: rotate(180deg);
+}
+
+.activity-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.activity-card.expanded .activity-details {
+    max-height: 500px;
+    padding-top: 16px;
+    border-top: 1px solid var(--color-charcoal-600);
+    margin-top: 16px;
+}
+
+/* ========== CHECKLIST INTERATIVO ========== */
+.checklist-item {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background: var(--color-charcoal-700);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.checklist-item:hover {
+    background: var(--color-charcoal-600);
+}
+
+.checklist-checkbox {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--color-teal-500);
+    border-radius: 6px;
+    margin-right: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.checklist-checkbox.checked {
+    background: var(--color-teal-500);
+    animation: checkScale 0.3s ease;
+}
+
+.checklist-checkbox.checked::after {
+    content: '✓';
+    color: white;
+    font-weight: bold;
+}
+
+@keyframes checkScale {
+    0% { transform: scale(0.5); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.checklist-text.completed {
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+/* ========== DARK MODE TOGGLE MELHORADO ========== */
+.theme-selector {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: var(--color-charcoal-800);
+    border-radius: 30px;
+    padding: 8px;
+    display: flex;
+    gap: 8px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    z-index: 1000;
+}
+
+.theme-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    background: var(--color-charcoal-700);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: all 0.3s ease;
+}
+
+.theme-button:hover {
+    transform: scale(1.1);
+    background: var(--color-charcoal-600);
+}
+
+.theme-button.active {
+    border-color: var(--color-teal-500);
+    background: var(--color-teal-500);
+}
+
+/* ========== NOTIFICAÇÕES ========== */
+.notification-toast {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    background: var(--color-charcoal-800);
+    padding: 16px 24px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    border-left: 4px solid var(--color-teal-500);
+    z-index: 1001;
+    animation: slideIn 0.3s ease, slideOut 0.3s ease 4.7s;
+    max-width: 350px;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(400px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+    to { transform: translateX(400px); opacity: 0; }
+}
+
+/* ========== RASTREAMENTO DE GASTOS ========== */
+.spending-widget {
+    background: var(--color-charcoal-800);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.spending-comparison {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+}
+
+.spending-col {
+    flex: 1;
+    text-align: center;
+}
+
+.spending-value {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 8px 0;
+}
+
+.spending-value.estimado {
+    color: var(--color-teal-400);
+}
+
+.spending-value.real {
+    color: var(--color-orange-400);
+}
+
+.spending-value.economia {
+    color: var(--color-green-400);
+}
+
+.spending-difference {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+.spending-difference.positive {
+    background: var(--color-green-500);
+    color: white;
+}
+
+.spending-difference.negative {
+    background: var(--color-red-500);
+    color: white;
+}
+
+/* ========== RESPONSIVIDADE ========== */
+@media (max-width: 768px) {
+    .timeline-day {
+        padding-left: 60px;
+    }
+    
+    .theme-selector {
+        bottom: 10px;
+        right: 10
